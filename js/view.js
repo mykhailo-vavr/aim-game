@@ -68,6 +68,13 @@ export const view = {
     );
   },
 
+  misclickCapture(event) {
+    if (event.target == this.playGround) {
+      model.misclicks++;
+    }
+    console.log(model.misclicks);
+  },
+
   resetGame() {
     setTimeout(() => {
       this.timer.classList.remove('hidden');

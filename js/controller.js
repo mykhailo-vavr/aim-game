@@ -8,7 +8,12 @@ export const controller = {
 
   setListeners() {
     this.boundOnClick = this.onClick.bind(this);
+    view.boundMisclickCapture = view.misclickCapture.bind(view);
     document.addEventListener('click', this.boundOnClick);
+    view.playGround.addEventListener(
+      'click',
+      view.boundMisclickCapture
+    );
   },
 
   onClick(event) {
