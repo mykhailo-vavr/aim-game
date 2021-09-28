@@ -26,9 +26,7 @@ export const controller = {
       model.start();
     }
 
-    if (action == 'removeCircle') {
-      view[action](dataset.id);
-    } else if (action) {
+    if (action) {
       view[action]();
     }
   },

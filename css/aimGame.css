@@ -190,7 +190,10 @@ body {
   cursor: pointer;
   border-radius: 100%;
   background: rgb(17, 80, 216);
-  animation: circlesAnimation 4s infinite;
+  transition: all 2s linear;
+  width: 10px;
+  height: 10px;
+  animation: circlesAnimation 4s linear 1;
 }
 
 @keyframes circlesAnimation {

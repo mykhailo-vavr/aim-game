@@ -1,14 +1,12 @@
 import { model } from './model.js';
 
 export const view = {
-  circleId: 0,
   position: 0,
   size: 10,
   gameContainer: document.querySelector('.aim-game-container'),
   timer: document.querySelector('.aim-game-timer'),
   playGround: document.querySelector('.aim-game-playground'),
   playGroundSize: 450,
-  circles: [],
   animationTime: 4000,
 
   changeScreen(position) {
@@ -22,16 +20,22 @@ export const view = {
     }, 50);
   },
 
-  newMEthod() {},
-
-  removeCircle(id) {
-    let index = this.circles.findIndex((circle) => {
-      return circle.dataset.id == id;
-    });
-    this.circles[index].remove();
-    this.circles.splice(index, 1);
-
+  removeCircleByClick(event) {
+    let target = event.target;
+    target.removeEventListener(
+      'click',
+      this.boundRemoveCircleByClick
+    );
+    target.remove();
     model.score++;
+  },
+
+  removeCircleAfterTime(circle) {
+    circle.removeEventListener(
+      'click',
+      this.boundRemoveCircleByClick
+    );
+    circle.remove();
   },
 
   changeTime(time) {
@@ -42,33 +46,30 @@ export const view = {
   },
 
   createCircle() {
-    let sizeLimit = this.playGroundSize - (this.size * 5) / 2;
-    let x = model.getRandomNumber((this.size * 5) / 2, sizeLimit);
-    let y = model.getRandomNumber((this.size * 5) / 2, sizeLimit);
+    this.maxSize = this.size * 5;
+    let positionLimit = this.playGroundSize - this.maxSize / 2;
+    let x = model.getRandomNumber(this.maxSize / 2, positionLimit);
+    let y = model.getRandomNumber(this.maxSize / 2, positionLimit);
 
     let circle = document.createElement('div');
     circle.classList.add('playground-circle');
-    circle.setAttribute('data-action', 'removeCircle');
-    circle.setAttribute('data-id', this.circleId++);
     circle.style.cssText = `left: ${x}px;
-                            top: ${y}px;
-                            width: ${this.size}px;
-                            height: ${this.size}px;`;
-    this.playGround.append(circle);
-    this.circles.push(circle);
+                            top: ${y}px;`;
 
-    this.boundRemoveCircle = this.removeCircle.bind(this);
+    this.boundRemoveCircleByClick =
+      this.removeCircleByClick.bind(this);
+    circle.addEventListener('click', this.boundRemoveCircleByClick);
+    this.playGround.append(circle);
+
     setTimeout(
-      this.boundRemoveCircle,
+      this.removeCircleAfterTime,
       this.animationTime,
-      circle.dataset.id
+      circle
     );
   },
 
   resetGame() {
     setTimeout(() => {
-      this.circleId = 0;
-      this.circles = [];
       this.timer.classList.remove('hidden');
       this.playGround.innerHTML = '';
     }, 500);
@@ -78,8 +79,8 @@ export const view = {
   finishGame() {
     this.playGround.innerHTML = `<h1>Score: ${model.record}<h1>
                                 <h1>Record: ${model.score}<h1>
-                                <h1>Record: ${model.misclicks}<h1>
-                                <button class="aim-game-btn " data-action="resetGame">Retry<button>`;
+                                <h1>Misclicks: ${model.misclicks}<h1>
+                                <button class="aim-game-btn" data-action="resetGame">Retry<button>`;
     this.timer.classList.add('hidden');
   },
 };
