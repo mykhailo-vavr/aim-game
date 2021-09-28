@@ -9,6 +9,36 @@ export const view = {
   playGroundSize: 450,
   animationTime: 4000,
 
+  removeCircleByClick(event) {
+    let target = event.target;
+    target.removeEventListener(
+      'click',
+      this.boundRemoveCircleByClick
+    );
+    target.remove();
+    model.score++;
+    this.changeStatistic('score');
+    if (model.score >= model.record) {
+      model.record = model.score;
+      this.changeStatistic('record');
+    }
+  },
+
+  removeCircleAfterTime(circle) {
+    circle.removeEventListener(
+      'click',
+      this.boundRemoveCircleByClick
+    );
+    circle.remove();
+  },
+
+  misclickCapture(event) {
+    if (event.target == this.playGround) {
+      model.misclicks++;
+      this.changeStatistic('misclicks');
+    }
+  },
+
   changeScreen(position) {
     if (position) {
       this.position = position;
@@ -20,29 +50,22 @@ export const view = {
     }, 50);
   },
 
-  removeCircleByClick(event) {
-    let target = event.target;
-    target.removeEventListener(
-      'click',
-      this.boundRemoveCircleByClick
-    );
-    target.remove();
-    model.score++;
-  },
-
-  removeCircleAfterTime(circle) {
-    circle.removeEventListener(
-      'click',
-      this.boundRemoveCircleByClick
-    );
-    circle.remove();
-  },
-
   changeTime(time) {
     if (time < 10) {
       time = '0' + time;
     }
     this.timer.textContent = `00:${time}`;
+  },
+
+  changeStatistic(statisticType, value) {
+    let statisticSpan = document.querySelector(
+      '.statistic-' + statisticType
+    );
+    if (value) {
+      statisticSpan.textContent = value;
+    } else {
+      statisticSpan.textContent = model[statisticType];
+    }
   },
 
   createCircle() {
@@ -68,17 +91,16 @@ export const view = {
     );
   },
 
-  misclickCapture(event) {
-    if (event.target == this.playGround) {
-      model.misclicks++;
-    }
-    console.log(model.misclicks);
-  },
-
   resetGame() {
     setTimeout(() => {
       this.timer.classList.remove('hidden');
       this.playGround.innerHTML = '';
+      this.changeStatistic('score', 0);
+      this.changeStatistic('misclicks', 0);
+      this.playGround.addEventListener(
+        'click',
+        this.boundMisclickCapture
+      );
     }, 500);
     this.changeScreen(-100);
   },
@@ -88,6 +110,10 @@ export const view = {
                                 <h1>Record: ${model.score}<h1>
                                 <h1>Misclicks: ${model.misclicks}<h1>
                                 <button class="aim-game-btn" data-action="resetGame">Retry<button>`;
+    this.playGround.removeEventListener(
+      'click',
+      this.boundMisclickCapture
+    );
     this.timer.classList.add('hidden');
   },
 };

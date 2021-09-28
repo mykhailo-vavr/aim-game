@@ -19,7 +19,7 @@ export const model = {
       if (this.time > 0) {
         view.changeTime(--this.time);
       } else {
-        this.finish();
+        this.finishGame();
       }
     }, 1000);
   },
@@ -30,11 +30,18 @@ export const model = {
     }, this.speed);
   },
 
-  finish() {
+  resetGame() {
+    this.record = Math.max(this.record, this.score);
+    this.score = 0;
+    this.misclicks = 0;
+  },
+
+  finishGame() {
     clearInterval(this.timerForTimeId);
     clearInterval(this.timerForCircles);
     this.record = Math.max(this.score, this.record);
     view.finishGame();
+    this.resetGame();
   },
 
   getRandomNumber(min, max) {
