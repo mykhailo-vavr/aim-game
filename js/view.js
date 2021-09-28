@@ -22,6 +22,8 @@ export const view = {
     }, 50);
   },
 
+  newMEthod() {},
+
   removeCircle(id) {
     let index = this.circles.findIndex((circle) => {
       return circle.dataset.id == id;
@@ -74,8 +76,9 @@ export const view = {
   },
 
   finishGame() {
-    this.playGround.innerHTML = `<h1>Score: ${model.score}<h1>
+    this.playGround.innerHTML = `<h1>Score: ${model.record}<h1>
                                 <h1>Record: ${model.score}<h1>
+                                <h1>Record: ${model.misclicks}<h1>
                                 <button class="aim-game-btn " data-action="resetGame">Retry<button>`;
     this.timer.classList.add('hidden');
   },
