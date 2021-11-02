@@ -1,3 +1,3 @@
-import { controller } from './controller.js';
+import { controller as game } from './controller.js';
 
-controller.start();
+game.start();

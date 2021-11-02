@@ -8,7 +8,6 @@ export const model = {
   time: 0,
 
   start() {
-    console.log('Game is started', this.time, this.speed);
     this.timeChanger();
     this.circleFactory();
   },
@@ -25,23 +24,43 @@ export const model = {
   },
 
   circleFactory() {
-    this.timerForCircles = setInterval(() => {
-      view.createCircle();
-    }, this.speed);
+    this.timerForCirclesId = setInterval(
+      () => view.createCircle(),
+      this.speed
+    );
   },
 
-  resetGame() {
-    this.record = Math.max(this.record, this.score);
-    this.score = 0;
-    this.misclicks = 0;
+  changeScreen() {
+    view.changeScreen();
+  },
+
+  removeCircleByClick(target) {
+    view.removeCircle(target);
+
+    this.score++;
+    view.changeStatistic('score', this.score);
+
+    if (this.score >= this.record) {
+      model.record = model.score;
+      view.changeStatistic('record', this.record);
+    }
+  },
+
+  catchMisclick() {
+    this.misclicks++;
+    view.changeStatistic('misclicks', this.misclicks);
   },
 
   finishGame() {
     clearInterval(this.timerForTimeId);
-    clearInterval(this.timerForCircles);
-    this.record = Math.max(this.score, this.record);
+    clearInterval(this.timerForCirclesId);
     view.finishGame();
-    this.resetGame();
+  },
+
+  resetGame() {
+    this.score = 0;
+    this.misclicks = 0;
+    view.resetGame();
   },
 
   getRandomNumber(min, max) {
@@ -49,7 +68,5 @@ export const model = {
       [min, max] = [max, min];
     }
     return Math.round(Math.random() * (max - min) + min);
-  },
+  }
 };
-
-window.m = model;

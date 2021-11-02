@@ -1,121 +1,86 @@
 import { model } from './model.js';
 
 export const view = {
+  gameContainer: document.querySelector('.aim_game-container'),
+  timer: document.querySelector('.aim_game-timer'),
+  playGround: document.querySelector('.aim_game-playground'),
   position: 0,
   size: 10,
-  gameContainer: document.querySelector('.aim-game-container'),
-  timer: document.querySelector('.aim-game-timer'),
-  playGround: document.querySelector('.aim-game-playground'),
-  playGroundSize: 450,
   animationTime: 4000,
 
-  removeCircleByClick(event) {
-    let target = event.target;
-    target.removeEventListener(
-      'click',
-      this.boundRemoveCircleByClick
-    );
+  start() {
+    this.playGroundSize = this.playGround.offsetWidth;
+    this.maxSize = this.size * 5;
+  },
+
+  removeCircle(target) {
     target.remove();
-    model.score++;
-    this.changeStatistic('score');
-    if (model.score >= model.record) {
-      model.record = model.score;
-      this.changeStatistic('record');
-    }
-  },
-
-  removeCircleAfterTime(circle) {
-    circle.removeEventListener(
-      'click',
-      this.boundRemoveCircleByClick
-    );
-    circle.remove();
-  },
-
-  misclickCapture(event) {
-    if (event.target == this.playGround) {
-      model.misclicks++;
-      this.changeStatistic('misclicks');
-    }
   },
 
   changeScreen(position) {
-    if (position) {
+    if (position !== undefined) {
       this.position = position;
     } else {
       this.position -= 100;
     }
-    setTimeout(() => {
-      this.gameContainer.style.transform = `translateY(${this.position}vh)`;
-    }, 50);
+    this.gameContainer.style.transform = `translateY(${this.position}vh)`;
   },
 
   changeTime(time) {
-    if (time < 10) {
-      time = '0' + time;
-    }
+    time = time < 10 ? `0${time}` : time;
     this.timer.textContent = `00:${time}`;
   },
 
   changeStatistic(statisticType, value) {
     let statisticSpan = document.querySelector(
-      '.statistic-' + statisticType
+      `.statistic-${statisticType}`
     );
-    if (value) {
-      statisticSpan.textContent = value;
-    } else {
-      statisticSpan.textContent = model[statisticType];
-    }
+    statisticSpan.textContent = value;
   },
 
   createCircle() {
-    this.maxSize = this.size * 5;
     let positionLimit = this.playGroundSize - this.maxSize / 2;
     let x = model.getRandomNumber(this.maxSize / 2, positionLimit);
     let y = model.getRandomNumber(this.maxSize / 2, positionLimit);
 
-    let circle = document.createElement('div');
-    circle.classList.add('playground-circle');
-    circle.style.cssText = `left: ${x}px;
-                            top: ${y}px;`;
+    let circleHTML = `
+      <div
+        class="playground-circle"
+        style="left: ${x}px; top: ${y}px;"
+        data-action="removeCircleByClick"
+      >
+      </div>
+    `;
 
-    this.boundRemoveCircleByClick =
-      this.removeCircleByClick.bind(this);
-    circle.addEventListener('click', this.boundRemoveCircleByClick);
-    this.playGround.append(circle);
+    this.playGround.insertAdjacentHTML('afterbegin', circleHTML);
+    let circle = this.playGround.firstElementChild;
 
-    setTimeout(
-      this.removeCircleAfterTime,
-      this.animationTime,
-      circle
-    );
+    setTimeout(() => this.removeCircle(circle), this.animationTime);
   },
 
   resetGame() {
+    this.changeScreen(-100);
     setTimeout(() => {
       this.timer.classList.remove('hidden');
       this.playGround.innerHTML = '';
       this.changeStatistic('score', 0);
       this.changeStatistic('misclicks', 0);
-      this.playGround.addEventListener(
-        'click',
-        this.boundMisclickCapture
-      );
     }, 500);
-    this.changeScreen(-100);
   },
 
   finishGame() {
-    this.playGround.innerHTML = `<h1>Score: ${model.record}<h1>
-                                <h1>Record: ${model.score}<h1>
-                                <h1>Misclicks: ${model.misclicks}<h1>
-                                <button class="aim-game-btn" data-action="resetGame">Retry<button>`;
-    this.playGround.removeEventListener(
-      'click',
-      this.boundMisclickCapture
-    );
+    this.playGround.innerHTML = `
+      <div class="aim_game-playground-inner_statistic">
+        <h1>Record: ${model.record}<h1>                        
+        <h1>Score: ${model.score}<h1>
+        <h1>Misclicks: ${model.misclicks}<h1>
+        <button
+          class="aim_game-btn"
+          data-action="resetGame"
+        >
+          Retry
+        <button>
+      </div>`;
     this.timer.classList.add('hidden');
-  },
+  }
 };
-
-window.v = view;

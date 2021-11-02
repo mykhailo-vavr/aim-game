@@ -3,21 +3,19 @@ import { view } from './view.js';
 
 export const controller = {
   start() {
+    view.start();
     this.setListeners();
   },
 
   setListeners() {
-    this.boundOnClick = this.onClick.bind(this);
-    view.boundMisclickCapture = view.misclickCapture.bind(view);
-    document.addEventListener('click', this.boundOnClick);
-    view.playGround.addEventListener(
+    view.gameContainer.addEventListener(
       'click',
-      view.boundMisclickCapture
+      this.onClick.bind(this)
     );
   },
 
-  onClick(event) {
-    const dataset = event.target.dataset,
+  onClick({ target }) {
+    const dataset = target.dataset,
       action = dataset.action,
       time = dataset.time,
       speed = dataset.speed;
@@ -32,7 +30,7 @@ export const controller = {
     }
 
     if (action) {
-      view[action]();
+      model[action](target);
     }
-  },
+  }
 };

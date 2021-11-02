@@ -12,35 +12,35 @@
     <title>Aim Game</title>
   </head>
   <body>
-    <div class="aim-game">
-      <div class="aim-game-container">
-        <div class="aim-game-screen">
-          <h1 class="aim-game-title">Aim Game</h1>
+    <div class="aim_game">
+      <div class="aim_game-container">
+        <div class="aim_game-screen">
+          <h1 class="aim_game-title">Aim Game</h1>
           <div class="arrow-container" data-action="changeScreen">
             <span class="arrow-item"></span>
             <span class="arrow-item"></span>
             <span class="arrow-item"></span>
           </div>
         </div>
-        <div class="aim-game-screen">
-          <h2 class="aim-game-caption">Choose the hardness</h2>
-          <div class="aim-game-btn-container">
+        <div class="aim_game-screen">
+          <h2 class="aim_game-caption">Choose the hardness</h2>
+          <div class="aim_game-btn-container">
             <button
-              class="aim-game-btn"
+              class="aim_game-btn"
               data-speed="1000"
               data-action="changeScreen"
             >
               Easy
             </button>
             <button
-              class="aim-game-btn"
+              class="aim_game-btn"
               data-speed="700"
               data-action="changeScreen"
             >
               Hard
             </button>
             <button
-              class="aim-game-btn"
+              class="aim_game-btn"
               data-speed="400"
               data-action="changeScreen"
             >
@@ -48,25 +48,25 @@
             </button>
           </div>
         </div>
-        <div class="aim-game-screen">
-          <h2 class="aim-game-caption">Choose the time</h2>
-          <div class="aim-game-btn-container">
+        <div class="aim_game-screen">
+          <h2 class="aim_game-caption">Choose the time</h2>
+          <div class="aim_game-btn-container">
             <button
-              class="aim-game-btn"
+              class="aim_game-btn"
               data-time="10"
               data-action="changeScreen"
             >
               10s
             </button>
             <button
-              class="aim-game-btn"
+              class="aim_game-btn"
               data-time="20"
               data-action="changeScreen"
             >
               20s
             </button>
             <button
-              class="aim-game-btn"
+              class="aim_game-btn"
               data-time="30"
               data-action="changeScreen"
             >
@@ -74,11 +74,14 @@
             </button>
           </div>
         </div>
-        <div class="aim-game-screen">
-          <div class="aim-game-timer">00:00</div>
-          <div class="aim-game-playground-container">
-            <div class="aim-game-playground"></div>
-            <div class="aim-game-statistic">
+        <div class="aim_game-screen">
+          <div class="aim_game-timer">00:00</div>
+          <div class="aim_game-playground-container">
+            <div
+              class="aim_game-playground"
+              data-action="catchMisclick"
+            ></div>
+            <div class="aim_game-outer_statistic">
               <div class="statistic-item">
                 Record: <span class="statistic-record">0</span>
               </div>
